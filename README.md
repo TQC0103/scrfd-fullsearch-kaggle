@@ -72,6 +72,7 @@ README.md            repo overview + workflow guide
    ```
 
 5. If you want the most stable path for full SCRFD baseline/search research, prefer a Linux virtual environment instead of a locked Kaggle competition image. See [VENV_LINUX.md](VENV_LINUX.md).
+6. If you want the fewest setup steps on a Linux GPU machine, use [RUN_LINUX_MINIMAL.md](RUN_LINUX_MINIMAL.md), [`environment.linux.yml`](environment.linux.yml), and [`scripts/bootstrap_linux_env.sh`](scripts/bootstrap_linux_env.sh).
 
 ## Dataset Preparation
 

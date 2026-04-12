@@ -1,0 +1,23 @@
+name: scrfd
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  - pip
+  - cudatoolkit=11.0
+  - pytorch=1.7.0
+  - torchvision=0.8.1
+  - cython
+  - numpy<2
+  - pip:
+      - mmcv-full==1.2.7
+      - autotorch
+      - matplotlib
+      - mmpycocotools
+      - opencv-python-headless
+      - six
+      - terminaltables
+      - tqdm
+

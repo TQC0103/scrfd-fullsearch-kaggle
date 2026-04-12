@@ -63,6 +63,9 @@ def main():
     missing = [name for name in REQUIRED_FILES if name not in names]
     forbidden = []
     for name in names:
+        if "\\" in name:
+            forbidden.append(name)
+            continue
         for prefix in FORBIDDEN_PREFIXES:
             if name.startswith(prefix):
                 forbidden.append(name)

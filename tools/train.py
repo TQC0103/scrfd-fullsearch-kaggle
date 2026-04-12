@@ -33,6 +33,13 @@ def safe_dump_config(cfg, output_path):
             f.write(safe_config_text(cfg))
 
 
+def safe_git_hash():
+    try:
+        return get_git_hash()[:7]
+    except Exception:
+        return ''
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a detector')
     parser.add_argument('config', help='train config file path')
@@ -179,7 +186,7 @@ def main():
         # save mmdet version, config file content and class names in
         # checkpoints as meta data
         cfg.checkpoint_config.meta = dict(
-            mmdet_version=__version__ + get_git_hash()[:7],
+            mmdet_version=__version__ + safe_git_hash(),
             CLASSES=datasets[0].CLASSES)
     # add an attribute for visualization convenience
     model.CLASSES = datasets[0].CLASSES

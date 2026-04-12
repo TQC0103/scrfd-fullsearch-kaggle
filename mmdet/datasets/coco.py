@@ -18,7 +18,11 @@ from .custom import CustomDataset
 try:
     import pycocotools
     if not hasattr(pycocotools, '__sphinx_mock__'):  # for doc generation
-        assert pycocotools.__version__ >= '12.0.2'
+        version = getattr(pycocotools, '__version__', None)
+        if version is not None:
+            assert version >= '12.0.2'
+except ImportError:
+    pycocotools = None
 except AssertionError:
     raise AssertionError('Incompatible version of pycocotools is installed. '
                          'Run pip uninstall pycocotools first. Then run pip '

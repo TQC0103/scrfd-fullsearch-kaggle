@@ -7,7 +7,11 @@ from mmcv.utils import print_log
 from torch.utils.data.dataset import ConcatDataset as _ConcatDataset
 
 from .builder import DATASETS
-from .coco import CocoDataset
+
+try:
+    from .coco import CocoDataset
+except Exception:  # pragma: no cover - optional for SCRFD-only environments
+    CocoDataset = ()
 
 
 @DATASETS.register_module()
@@ -29,7 +33,7 @@ class ConcatDataset(_ConcatDataset):
         self.CLASSES = datasets[0].CLASSES
         self.separate_eval = separate_eval
         if not separate_eval:
-            if any([isinstance(ds, CocoDataset) for ds in datasets]):
+            if CocoDataset and any([isinstance(ds, CocoDataset) for ds in datasets]):
                 raise NotImplementedError(
                     'Evaluating concatenated CocoDataset as a whole is not'
                     ' supported! Please set "separate_eval=True"')

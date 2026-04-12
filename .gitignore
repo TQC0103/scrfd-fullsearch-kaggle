@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+data/
+work_dirs/
+wouts/
+outputs/
+logs/
+tmp/
+
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db

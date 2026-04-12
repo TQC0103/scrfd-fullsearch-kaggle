@@ -1,0 +1,8 @@
+autotorch
+matplotlib
+mmpycocotools
+numpy<2
+opencv-python-headless
+six
+terminaltables
+tqdm

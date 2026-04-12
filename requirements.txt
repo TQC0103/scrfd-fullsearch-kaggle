@@ -1,0 +1,4 @@
+# Core dependencies for running SCRFD training, evaluation, and search.
+# Install mmcv/mmcv-full separately with a wheel that matches your PyTorch/CUDA build.
+-r requirements/build.txt
+-r requirements/runtime.txt

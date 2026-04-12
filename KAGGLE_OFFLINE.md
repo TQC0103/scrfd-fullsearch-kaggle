@@ -126,6 +126,12 @@ After the repo is copied into `/kaggle/working`, set:
 Baseline sanity check:
 
 ```bash
+!bash scripts/train_scrfd_1g_quick.sh
+```
+
+If you really want the longer default schedule from the bundled config, use:
+
+```bash
 !bash scripts/train_scrfd_1g.sh
 !CHECKPOINT=/kaggle/working/scrfd-fullsearch-kaggle/work_dirs/scrfd_1g/latest.pth \
   bash scripts/eval_scrfd_1g.sh

@@ -51,6 +51,12 @@ retinaface/
 Train:
 
 ```bash
+!bash scripts/train_scrfd_1g_quick.sh
+```
+
+Longer baseline schedule:
+
+```bash
 !bash scripts/train_scrfd_1g.sh
 ```
 

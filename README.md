@@ -101,7 +101,13 @@ The raw upstream configs still default to `data/retinaface`. The new wrapper scr
 
 ## Quick Sanity Check
 
-Train `SCRFD-1.0GF`:
+Train `SCRFD-1.0GF` quickly for Kaggle sanity checks:
+
+```bash
+bash scripts/train_scrfd_1g_quick.sh
+```
+
+This wrapper keeps the model at `SCRFD-1.0GF` but drops training to a short sanity run by default (`8` epochs, eval/checkpoint every `2` epochs). If you explicitly want the longer upstream-style baseline schedule, use:
 
 ```bash
 bash scripts/train_scrfd_1g.sh

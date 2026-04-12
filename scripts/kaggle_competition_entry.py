@@ -24,6 +24,7 @@ def parse_args():
         required=True,
         choices=[
             "baseline_train",
+            "baseline_train_quick",
             "baseline_eval",
             "step1_generate",
             "step1_train",
@@ -50,6 +51,14 @@ def parse_args():
     parser.add_argument("--mode-value", default=None, help="Forwarded to eval wrappers as MODE")
     parser.add_argument("--config-name", default=None, help="Optional baseline config override")
     parser.add_argument("--config-group", default=None, help="Optional baseline config group override")
+    parser.add_argument("--total-epochs", type=int, default=None, help="Optional training epoch override")
+    parser.add_argument("--eval-interval", type=int, default=None, help="Optional evaluation interval override")
+    parser.add_argument(
+        "--checkpoint-interval",
+        type=int,
+        default=None,
+        help="Optional checkpoint interval override",
+    )
     return parser.parse_args()
 
 
@@ -124,6 +133,12 @@ def build_env(args, repo_root):
         env["CONFIG_NAME"] = args.config_name
     if args.config_group:
         env["CONFIG_GROUP"] = args.config_group
+    if args.total_epochs is not None:
+        env["SCRFD_TOTAL_EPOCHS"] = str(args.total_epochs)
+    if args.eval_interval is not None:
+        env["SCRFD_EVAL_INTERVAL"] = str(args.eval_interval)
+    if args.checkpoint_interval is not None:
+        env["SCRFD_CHECKPOINT_INTERVAL"] = str(args.checkpoint_interval)
 
     return env
 
@@ -131,6 +146,7 @@ def build_env(args, repo_root):
 def dispatch_script(mode):
     mapping = {
         "baseline_train": "scripts/train_scrfd_1g.sh",
+        "baseline_train_quick": "scripts/train_scrfd_1g_quick.sh",
         "baseline_eval": "scripts/eval_scrfd_1g.sh",
         "step1_generate": "scripts/search_step1_generate.sh",
         "step1_train": "scripts/search_step1_train.sh",

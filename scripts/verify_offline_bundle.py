@@ -14,6 +14,7 @@ REQUIRED_FILES = [
     "scrfd-fullsearch-kaggle/configs/scrfdgen2.5g/scrfdgen2.5g_0.py",
     "scrfd-fullsearch-kaggle/scripts/common.sh",
     "scrfd-fullsearch-kaggle/scripts/train_scrfd_1g.sh",
+    "scrfd-fullsearch-kaggle/scripts/train_scrfd_1g_quick.sh",
     "scrfd-fullsearch-kaggle/scripts/eval_scrfd_1g.sh",
     "scrfd-fullsearch-kaggle/scripts/search_step1_generate.sh",
     "scrfd-fullsearch-kaggle/scripts/search_step2_generate.sh",

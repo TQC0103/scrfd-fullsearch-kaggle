@@ -155,7 +155,7 @@ def main():
     meta['config'] = safe_config_text(cfg)
     # log some basic info
     logger.info(f'Distributed training: {distributed}')
-    logger.info(f'Config:\n{cfg.pretty_text}')
+    logger.info(f'Config:\n{safe_config_text(cfg)}')
 
     # set random seeds
     if args.seed is not None:

@@ -1,5 +1,9 @@
 import torch
-from mmcv.ops.nms import batched_nms
+
+try:
+    from mmcv.ops.nms import batched_nms
+except Exception:  # pragma: no cover - fallback for environments without mmcv-full
+    from torchvision.ops import batched_nms
 
 from mmdet.core.bbox.iou_calculators import bbox_overlaps
 

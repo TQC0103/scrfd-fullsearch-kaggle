@@ -6,7 +6,10 @@ from .ohem_sampler import OHEMSampler
 from .pseudo_sampler import PseudoSampler
 from .random_sampler import RandomSampler
 from .sampling_result import SamplingResult
-from .score_hlr_sampler import ScoreHLRSampler
+try:
+    from .score_hlr_sampler import ScoreHLRSampler
+except Exception:  # pragma: no cover
+    ScoreHLRSampler = None
 
 __all__ = [
     'BaseSampler', 'PseudoSampler', 'RandomSampler',

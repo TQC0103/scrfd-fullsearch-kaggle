@@ -6,12 +6,15 @@ import sys
 from pathlib import Path
 
 
-REQUIRED_IMPORTS = [
+BASELINE_REQUIRED_IMPORTS = [
     "torch",
     "cv2",
     "mmcv",
-    "autotorch",
     "terminaltables",
+]
+
+SEARCH_REQUIRED_IMPORTS = BASELINE_REQUIRED_IMPORTS + [
+    "autotorch",
 ]
 
 
@@ -74,8 +77,15 @@ def ensure_pythonpath(repo_root):
     os.environ["PYTHONPATH"] = repo_str if not current else repo_str + ":" + current
 
 
-def install_offline_dependencies(repo_root, wheelhouse):
-    missing = [name for name in REQUIRED_IMPORTS if not has_module(name)]
+def required_imports_for_mode(mode):
+    if mode.startswith("step") or mode == "full_search":
+        return SEARCH_REQUIRED_IMPORTS
+    return BASELINE_REQUIRED_IMPORTS
+
+
+def install_offline_dependencies(repo_root, wheelhouse, mode):
+    required_imports = required_imports_for_mode(mode)
+    missing = [name for name in required_imports if not has_module(name)]
     if not missing:
         print("All required imports already available.")
         return
@@ -95,12 +105,17 @@ def install_offline_dependencies(repo_root, wheelhouse):
         "--no-index",
         "--find-links",
         wheelhouse,
-        "-r",
-        str(repo_root / "requirements.txt"),
+        "mmcv==1.4.0",
+        "addict",
+        "yapf",
+        "platformdirs",
+        "terminaltables",
     ]
+    if mode.startswith("step") or mode == "full_search":
+        cmd.append("autotorch")
     subprocess.run(cmd, check=True)
 
-    remaining = [name for name in REQUIRED_IMPORTS if not has_module(name)]
+    remaining = [name for name in required_imports if not has_module(name)]
     if remaining:
         raise RuntimeError(
             "Offline install finished but these modules are still missing: %s. "
@@ -167,7 +182,7 @@ def main():
     ensure_pythonpath(repo_root)
 
     if not args.skip_offline_install:
-        install_offline_dependencies(repo_root, args.wheelhouse)
+        install_offline_dependencies(repo_root, args.wheelhouse, args.mode)
 
     env = build_env(args, repo_root)
     script_path = repo_root / dispatch_script(args.mode)

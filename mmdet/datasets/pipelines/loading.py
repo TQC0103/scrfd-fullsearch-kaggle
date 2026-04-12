@@ -2,9 +2,15 @@ import os.path as osp
 
 import mmcv
 import numpy as np
-import pycocotools.mask as maskUtils
+try:
+    import pycocotools.mask as maskUtils
+except Exception:  # pragma: no cover - optional for bbox-only pipelines
+    maskUtils = None
 
-from mmdet.core import BitmapMasks, PolygonMasks
+try:
+    from mmdet.core import BitmapMasks, PolygonMasks
+except Exception:  # pragma: no cover - optional for bbox-only pipelines
+    BitmapMasks = PolygonMasks = None
 from ..builder import PIPELINES
 
 
@@ -291,6 +297,8 @@ class LoadAnnotations(object):
         Returns:
             numpy.ndarray: The decode bitmap mask of shape (img_h, img_w).
         """
+        if maskUtils is None:
+            raise ImportError('pycocotools is required when with_mask=True')
 
         if isinstance(mask_ann, list):
             # polygon -- a single object might consist of multiple parts
@@ -334,6 +342,8 @@ class LoadAnnotations(object):
                 If ``self.poly2mask`` is set ``True``, `gt_mask` will contain
                 :obj:`PolygonMasks`. Otherwise, :obj:`BitmapMasks` is used.
         """
+        if BitmapMasks is None or PolygonMasks is None:
+            raise ImportError('Mask support requires pycocotools-compatible mask classes')
 
         h, w = results['img_info']['height'], results['img_info']['width']
         gt_masks = results['ann_info']['masks']

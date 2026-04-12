@@ -10,7 +10,11 @@ import torch.distributed as dist
 from mmcv.image import tensor2imgs
 from mmcv.runner import get_dist_info
 
-from mmdet.core import encode_mask_results
+try:
+    from mmdet.core import encode_mask_results
+except Exception:  # pragma: no cover - bbox-only fallback for SCRFD
+    def encode_mask_results(mask_results):
+        return mask_results
 
 
 def single_gpu_test(model,

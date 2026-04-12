@@ -5,7 +5,11 @@ import numpy as np
 from numpy import random
 import cv2
 
-from mmdet.core import PolygonMasks
+try:
+    from mmdet.core import PolygonMasks
+except Exception:  # pragma: no cover - optional for bbox-only pipelines
+    class PolygonMasks:  # pylint: disable=too-few-public-methods
+        pass
 from mmdet.core.evaluation.bbox_overlaps import bbox_overlaps
 from ..builder import PIPELINES
 

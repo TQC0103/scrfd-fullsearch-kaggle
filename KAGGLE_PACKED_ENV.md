@@ -8,7 +8,7 @@ Upload these as Kaggle Datasets:
 
 1. `scrfd-fullsearch-kaggle-offline.zip`
 2. `retinaface-kaggle-upload-with-test.zip`
-3. `scrfd-kaggle-baseline-py312-cu128.tar.gz`
+3. `scrfd-kaggle-baseline-py312-cu128.tar.gz` or a renamed variant such as `scrfd-kaggle-baseline-py312-cu128-v2.tar.gz`
 
 The packed environment archive is created from Linux/WSL and already includes:
 

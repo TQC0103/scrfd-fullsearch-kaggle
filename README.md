@@ -223,6 +223,7 @@ If you want to research search improvements, these are the main files to edit:
 
 More notebook-oriented examples are in [KAGGLE.md](KAGGLE.md).
 If you are using a Kaggle **competition** notebook with internet disabled, use [KAGGLE_OFFLINE.md](KAGGLE_OFFLINE.md) instead.
+The repository also includes a ready-made notebook template at `notebooks/kaggle_competition_click_run.ipynb`.
 
 ## Main Wrapper Scripts
 

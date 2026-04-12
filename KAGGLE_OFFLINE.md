@@ -13,6 +13,8 @@ Use **two Kaggle Datasets**:
 
 This split makes it easier to update code without rebuilding the dependency bundle every time.
 
+There is also a ready-made notebook template in `notebooks/kaggle_competition_click_run.ipynb`. Upload that notebook to Kaggle, attach the source dataset, and change only the small config block at the top.
+
 ## 2. Prepare the source bundle locally
 
 From your local machine, run one of these before uploading to Kaggle:
@@ -33,6 +35,8 @@ Upload either:
 
 - the extracted repo folder as a Kaggle Dataset, or
 - the generated zip file as a Kaggle Dataset asset
+
+The bundle includes the ready-made notebook template under `notebooks/`.
 
 ## 3. In the competition notebook
 

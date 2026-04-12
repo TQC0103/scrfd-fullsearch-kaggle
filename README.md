@@ -71,6 +71,8 @@ README.md            repo overview + workflow guide
    python -c "import mmdet; print(mmdet.__version__)"
    ```
 
+5. If you want the most stable path for full SCRFD baseline/search research, prefer a Linux virtual environment instead of a locked Kaggle competition image. See [VENV_LINUX.md](VENV_LINUX.md).
+
 ## Dataset Preparation
 
 The wrapper scripts read WIDER FACE from `SCRFD_DATA_ROOT`.

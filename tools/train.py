@@ -18,6 +18,21 @@ from mmdet.models import build_detector
 from mmdet.utils import collect_env, get_root_logger
 
 
+def safe_config_text(cfg):
+    try:
+        return cfg.pretty_text
+    except TypeError:
+        return cfg.text
+
+
+def safe_dump_config(cfg, output_path):
+    try:
+        cfg.dump(output_path)
+    except TypeError:
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(safe_config_text(cfg))
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a detector')
     parser.add_argument('config', help='train config file path')
@@ -121,7 +136,7 @@ def main():
     # create work_dir
     mmcv.mkdir_or_exist(osp.abspath(cfg.work_dir))
     # dump config
-    cfg.dump(osp.join(cfg.work_dir, osp.basename(args.config)))
+    safe_dump_config(cfg, osp.join(cfg.work_dir, osp.basename(args.config)))
     # init the logger before other steps
     timestamp = time.strftime('%Y%m%d_%H%M%S', time.localtime())
     log_file = osp.join(cfg.work_dir, f'{timestamp}.log')
@@ -137,7 +152,7 @@ def main():
     logger.info('Environment info:\n' + dash_line + env_info + '\n' +
                 dash_line)
     meta['env_info'] = env_info
-    meta['config'] = cfg.pretty_text
+    meta['config'] = safe_config_text(cfg)
     # log some basic info
     logger.info(f'Distributed training: {distributed}')
     logger.info(f'Config:\n{cfg.pretty_text}')

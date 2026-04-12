@@ -2,6 +2,8 @@
 
 This repository is designed so that a Kaggle notebook can clone it, point it at a WIDER FACE dataset, and continue with either a quick baseline sanity check or the full SCRFD two-step search workflow.
 
+If your notebook comes from a Kaggle competition with internet disabled, switch to the offline workflow in `KAGGLE_OFFLINE.md` instead of using `git clone`.
+
 ## 1. Clone in a notebook
 
 ```bash

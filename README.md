@@ -222,10 +222,13 @@ If you want to research search improvements, these are the main files to edit:
 - If workers cause memory pressure on Kaggle, reduce `workers_per_gpu` in the relevant config.
 
 More notebook-oriented examples are in [KAGGLE.md](KAGGLE.md).
+If you are using a Kaggle **competition** notebook with internet disabled, use [KAGGLE_OFFLINE.md](KAGGLE_OFFLINE.md) instead.
 
 ## Main Wrapper Scripts
 
 - `scripts/prepare_env.sh`
+- `scripts/package_offline_bundle.ps1`
+- `scripts/package_offline_bundle.sh`
 - `scripts/train_baseline.sh`
 - `scripts/eval_baseline.sh`
 - `scripts/train_scrfd_1g.sh`

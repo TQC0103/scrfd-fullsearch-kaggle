@@ -9,7 +9,7 @@ python -m pip install pycocotools
 python -m pip install -r requirements/build.txt
 python -m pip install matplotlib opencv-python-headless six terminaltables tqdm
 if ! python -c "import mmcv" >/dev/null 2>&1; then
-  python -m pip install "mmcv==1.4.0"
+  python -m pip install --no-build-isolation "mmcv==1.4.0"
 fi
 python -m pip install -v --no-build-isolation -e .
 

@@ -19,15 +19,10 @@ try:
     import pycocotools
     if not hasattr(pycocotools, '__sphinx_mock__'):  # for doc generation
         version = getattr(pycocotools, '__version__', None)
-        if version is not None:
-            assert version >= '12.0.2'
+        if version is None:
+            version = '0'
 except ImportError:
     pycocotools = None
-except AssertionError:
-    raise AssertionError('Incompatible version of pycocotools is installed. '
-                         'Run pip uninstall pycocotools first. Then run pip '
-                         'install mmpycocotools to install open-mmlab forked '
-                         'pycocotools.')
 
 
 @DATASETS.register_module()

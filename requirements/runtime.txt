@@ -1,7 +1,6 @@
-autotorch
 matplotlib
 pycocotools
-numpy<2
+numpy
 opencv-python-headless
 six
 terminaltables

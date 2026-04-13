@@ -1,6 +1,6 @@
 autotorch
 matplotlib
-mmpycocotools
+pycocotools
 numpy<2
 opencv-python-headless
 six

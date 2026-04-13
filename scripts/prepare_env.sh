@@ -8,7 +8,7 @@ python -m pip install --upgrade pip setuptools wheel
 python -m pip install pycocotools
 python -m pip install -r requirements/build.txt
 python -m pip install matplotlib opencv-python-headless six terminaltables tqdm
-python -m pip install -v -e .
+python -m pip install -v --no-build-isolation -e .
 
 cat <<'EOF'
 Environment bootstrap completed.

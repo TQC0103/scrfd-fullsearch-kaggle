@@ -1,4 +1,6 @@
 import inspect
+import json
+import os
 
 import mmcv
 import numpy as np
@@ -824,15 +826,33 @@ class RandomSquareCrop(object):
         `gt_bboxes_ignore` to `gt_labels_ignore` and `gt_masks_ignore`.
     """
 
-    def __init__(self, crop_ratio_range=None, crop_choice=None, bbox_clip_border=True):
+    def __init__(self,
+                 crop_ratio_range=None,
+                 crop_choice=None,
+                 bbox_clip_border=True,
+                 crop_choice_weights=None,
+                 scheduler_state_file=None,
+                 scheduler_reload_interval=128):
 
         self.crop_ratio_range = crop_ratio_range
         self.crop_choice = crop_choice
         self.bbox_clip_border = bbox_clip_border
+        self.crop_choice_weights = crop_choice_weights
+        self.scheduler_state_file = scheduler_state_file
+        self.scheduler_reload_interval = max(1, int(scheduler_reload_interval))
+        self._scheduler_calls = 0
+        self._scheduler_mtime = None
 
         assert (self.crop_ratio_range is None) ^ (self.crop_choice is None)
         if self.crop_ratio_range is not None:
             self.crop_ratio_min, self.crop_ratio_max = self.crop_ratio_range
+        elif self.crop_choice_weights is not None:
+            assert len(self.crop_choice_weights) == len(self.crop_choice), \
+                'crop_choice_weights must have the same length as crop_choice'
+            self.crop_choice_weights = self._normalize_probs(
+                self.crop_choice_weights)
+        else:
+            self.crop_choice_weights = self._uniform_probs(self.crop_choice)
 
         self.bbox2label = {
             'gt_bboxes': 'gt_labels',
@@ -842,6 +862,48 @@ class RandomSquareCrop(object):
             'gt_bboxes': 'gt_masks',
             'gt_bboxes_ignore': 'gt_masks_ignore'
         }
+
+    def _uniform_probs(self, crop_choice):
+        if crop_choice is None or len(crop_choice) == 0:
+            return None
+        return [1.0 / len(crop_choice) for _ in crop_choice]
+
+    def _normalize_probs(self, probs):
+        probs = np.asarray(probs, dtype=np.float32)
+        probs = np.clip(probs, 1e-6, None)
+        probs /= probs.sum()
+        return probs.tolist()
+
+    def _maybe_reload_scheduler_state(self):
+        if not self.scheduler_state_file:
+            return
+
+        self._scheduler_calls += 1
+        if self._scheduler_calls % self.scheduler_reload_interval != 0:
+            return
+        if not os.path.exists(self.scheduler_state_file):
+            return
+
+        try:
+            mtime = os.path.getmtime(self.scheduler_state_file)
+            if self._scheduler_mtime is not None and mtime <= self._scheduler_mtime:
+                return
+
+            with open(self.scheduler_state_file, 'r', encoding='utf-8') as f:
+                state = json.load(f)
+
+            choices = state.get('crop_choice')
+            probs = state.get('crop_choice_weights')
+            if choices is not None and self.crop_choice is not None:
+                if list(map(float, choices)) != list(map(float, self.crop_choice)):
+                    return
+            if probs is not None and self.crop_choice is not None:
+                if len(probs) == len(self.crop_choice):
+                    self.crop_choice_weights = self._normalize_probs(probs)
+                    self._scheduler_mtime = mtime
+        except Exception:
+            # Do not break training when a worker reads a half-written state file.
+            return
 
     def __call__(self, results):
         """Call function to crop images and bounding boxes with minimum IoU
@@ -866,6 +928,7 @@ class RandomSquareCrop(object):
         #boxes = np.concatenate(boxes, 0)
         h, w, c = img.shape
         scale_retry = 0
+        self._maybe_reload_scheduler_state()
         if self.crop_ratio_range is not None:
             max_scale = self.crop_ratio_max
         else:
@@ -880,7 +943,8 @@ class RandomSquareCrop(object):
                     scale = np.random.uniform(self.crop_ratio_min,
                                               self.crop_ratio_max)
                 elif self.crop_choice is not None:
-                    scale = np.random.choice(self.crop_choice)
+                    scale = np.random.choice(
+                        self.crop_choice, p=self.crop_choice_weights)
             else:
                 #scale = min(scale*1.2, max_scale)
                 scale = scale*1.2
@@ -982,6 +1046,7 @@ class RandomSquareCrop(object):
                 img = rimg
                 results['img'] = img
                 results['img_shape'] = img.shape
+                results['sr_crop_scale'] = float(scale)
 
                 # seg fields
                 #for key in results.get('seg_fields', []):
